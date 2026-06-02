@@ -11,8 +11,6 @@ import utils.ScreenshotUtils;
 
 import java.nio.file.Path;
 
-import static java.sql.DriverManager.getDriver;
-
 public class TestExecutionListener implements ITestListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestExecutionListener.class);
@@ -36,18 +34,18 @@ public class TestExecutionListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         LOGGER.error("Test '{}' failed", result.getMethod().getMethodName(), result.getThrowable());
 
-//        WebDriver driver = DriverHolder.getDriver();
-//        if (driver == null) {
-//            LOGGER.warn("Screenshot was skipped because no active WebDriver was found");
-//            return;
-//        }
+        WebDriver driver = DriverHolder.getDriver();
+        if (driver == null) {
+            LOGGER.warn("Screenshot was skipped because no active WebDriver was found");
+            return;
+        }
 
-//        try {
-//            Path screenshotPath = ScreenshotUtils.captureFailureScreenshot(driver, result.getMethod().getMethodName());
-//            LOGGER.error("Failure screenshot saved to {}", screenshotPath);
-//        } catch (RuntimeException exception) {
-//            LOGGER.error("Failed to capture screenshot for test '{}'", result.getMethod().getMethodName(), exception);
-//        }
+        try {
+            Path screenshotPath = ScreenshotUtils.captureFailureScreenshot(driver, result.getMethod().getMethodName());
+            LOGGER.error("Failure screenshot saved to {}", screenshotPath);
+        } catch (RuntimeException exception) {
+            LOGGER.error("Failed to capture screenshot for test '{}'", result.getMethod().getMethodName(), exception);
+        }
     }
 
     @Override

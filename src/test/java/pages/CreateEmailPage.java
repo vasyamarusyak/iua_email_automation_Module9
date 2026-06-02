@@ -2,10 +2,11 @@ package pages;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Condition.clickable;
 import static com.codeborne.selenide.Selenide.$x;
+import static utils.WebElementUtil.highlightElementAndClick;
+import static utils.WebElementUtil.highlightElementAndSendKeys;
 
-public class CreateEmailPage {
+public class CreateEmailPage extends BasePage{
     private final SelenideElement receiverField = $x("//textarea[@id='to']");
     private final SelenideElement subjectField = $x("//*[@name='subject']");
     private final SelenideElement bodyField = $x("//*[@id='text']");
@@ -13,37 +14,29 @@ public class CreateEmailPage {
     private final SelenideElement saveInDraftsButton = $x("//input[@name='save_in_drafts']");
 
     public CreateEmailPage fillEmail(String receiver, String subject, String body) {
-        receiverField.shouldBe(clickable);
-        receiverField.click();
-        receiverField.sendKeys(receiver);
+        highlightElementAndClick(receiverField);
+        highlightElementAndSendKeys(receiverField, receiver);
         receiverField.pressTab();
 
-        subjectField.shouldBe(clickable);
-        subjectField.click();
+        highlightElementAndClick(subjectField);
         subjectField.clear();
-        subjectField.sendKeys(subject);
+        highlightElementAndSendKeys(subjectField, subject);
         receiverField.pressTab();
 
-        bodyField
-                .shouldBe(clickable)
-                .click();
-        bodyField.sendKeys(body);
+        highlightElementAndClick(bodyField);
+        highlightElementAndSendKeys(bodyField, body);
 
         return this;
     }
 
     public InboxPage sendEmail() {
-        sendButton
-                .shouldBe(clickable)
-                .click();
+        highlightElementAndClick(sendButton);
 
         return new InboxPage();
     }
 
     public InboxPage saveEmailInDrafts() {
-        saveInDraftsButton
-                .shouldBe(clickable)
-                .click();
+        highlightElementAndClick(saveInDraftsButton);
 
         return new InboxPage();
     }

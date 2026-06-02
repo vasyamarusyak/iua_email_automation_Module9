@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Regression Suite" verbose="1">
-    <test name="Regression Chrome">
-        <parameter name="browser" value="CHROME"/>
-        <groups>
-            <run>
-                <include name="regression"/>
-            </run>
-        </groups>
+<suite name="Smoke" verbose="1" >
+    <test name="UserAccess"   >
         <classes>
-            <class name="tests.MailTest"/>
-        </classes>
-    </test>
-    <test name="Regression Firefox">
-        <parameter name="browser" value="FIREFOX"/>
-        <groups>
-            <run>
-                <include name="regression"/>
-            </run>
-        </groups>
-        <classes>
-            <class name="tests.MailTest"/>
+            <class name="tests.MailTest" />
         </classes>
     </test>
 </suite>

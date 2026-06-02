@@ -1,25 +1,27 @@
 package tests;
+
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
+import config.FrameworkConfig;
 import listeners.TestExecutionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
+import static com.codeborne.selenide.Configuration.browser;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static java.time.Duration.ofSeconds;
 
 @Listeners(TestExecutionListener.class)
 public class BaseTest {
-    private static final String BASE_URL = "https://www.i.ua/";
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseTest.class);
+    private static final String BASE_URL = FrameworkConfig.getBaseUrl();
 
     @BeforeSuite
     public void configureLogging() {
@@ -30,14 +32,18 @@ public class BaseTest {
     }
 
     @BeforeMethod
-    public void setUpBrowser() {
-        Configuration.browser = "chrome";
-        Configuration.timeout = ofSeconds(90).toMillis();
-        Configuration.pageLoadTimeout = 60000;
-        ChromeOptions options = new ChromeOptions();
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+    public void setUpBrowser(ITestContext context) {
+        browser = FrameworkConfig.getBrowserName();
+        Configuration.timeout = ofSeconds(30).toMillis();
 
-        open(BASE_URL);
+        LOGGER.info(
+                "[ACTION] Preparing driver for browser='{}', env='{}', headless={}",
+                browser,
+                FrameworkConfig.getEnvironment(),
+                FrameworkConfig.isHeadless());
+
+       open(BASE_URL);
+       LOGGER.debug("Opened base URL {}", BASE_URL);
 
         getWebDriver()
                 .manage()
@@ -48,5 +54,6 @@ public class BaseTest {
     @AfterMethod(alwaysRun = true)
     public void closeWebDriver() {
         WebDriverRunner.closeWebDriver();
+        LOGGER.info("[ACTION] Closing browser session");
     }
 }

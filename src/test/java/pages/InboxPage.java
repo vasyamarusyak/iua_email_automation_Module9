@@ -7,40 +7,37 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 import static java.lang.String.format;
 import static java.time.Duration.ofSeconds;
+import static utils.WebElementUtil.highlightElementAndClick;
 import static utils.WebElementUtil.isDisplayed;
 
-public class InboxPage {
+public class InboxPage extends BasePage {
     private static final String DRAFT_BY_SUBJECT_XPATH = "//span[@class='sbj' and @title = '%s']";
     private static final String SENT_BY_SUBJECT_XPATH = "//a[contains(@href,'/sent-mail')]//span[text()= '%s']";
     private final SelenideElement letterSuccesfullySentLabel = $x("//div[@class='content clear' and text()='Лист успішно відправлено адресатам']");
     private final SelenideElement draftsFolder = $x("//a[contains(@href,'drafts')]");
     private final SelenideElement sentFolder = $x("//a[contains(@href,'sent')]");
     private final SelenideElement createLetterButton = $("p.make_message > a");
+    private final SelenideElement gearButton = $x("//span[@title = 'Налаштування']");
+    private final SelenideElement logoutButton = $x("//a[contains(@href,'logout')]");
 
     public boolean isLoginSuccessful() {
         return isDisplayed($x("//img[@class= 'avatar-s']"), ofSeconds(5));
     }
 
     public InboxPage openDraftsFolder() {
-        draftsFolder
-                .shouldBe(clickable)
-                .click();
+        highlightElementAndClick(draftsFolder);
 
         return this;
     }
 
     public InboxPage openSentFolder() {
-        sentFolder
-                .shouldBe(clickable)
-                .click();
+        highlightElementAndClick(sentFolder);
 
         return this;
     }
 
     public CreateEmailPage clickCreateLetter() {
-        createLetterButton
-                .shouldBe(clickable)
-                .click();
+        highlightElementAndClick(createLetterButton);
 
         return new CreateEmailPage();
     }
@@ -66,8 +63,8 @@ public class InboxPage {
     }
 
     public LoginPage logOut() {
-        $x("//span[@title = 'Налаштування']").click();
-        $x("//a[contains(@href,'logout')]").shouldBe(clickable).click();
+        highlightElementAndClick(gearButton);
+        highlightElementAndClick(logoutButton);
 
         return new LoginPage();
     }
