@@ -1,8 +1,8 @@
 package models;
 
-import lombok.Getter;
+//import lombok.Getter;
 
-@Getter
+//@Getter
 public class UserCredentials {
     String username;
     String password;
@@ -10,5 +10,13 @@ public class UserCredentials {
     public UserCredentials(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
