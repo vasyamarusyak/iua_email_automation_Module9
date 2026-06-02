@@ -8,7 +8,6 @@ import pages.LoginPage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MailTest extends BaseTest {
-
     private static final String RECEIVER = FrameworkConfig.getDefaultRecipient() + System.currentTimeMillis() + "@i.ua";
     private static final String SUBJECT = "Test Subject " + System.currentTimeMillis();
     private static final String BODY = "Test Body";
@@ -57,6 +56,5 @@ public class MailTest extends BaseTest {
         assertThat(loginPage.isLoginMenuPresent())
                 .as("Login menu is not present on login page")
                 .isTrue();
-
     }
 }

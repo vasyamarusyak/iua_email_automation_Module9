@@ -2,7 +2,10 @@ package tests;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import config.FrameworkConfig;
+import io.qameta.allure.selenide.AllureSelenide;
+import io.qameta.allure.testng.AllureTestNg;
 import listeners.TestExecutionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +21,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static java.time.Duration.ofSeconds;
 
-@Listeners(TestExecutionListener.class)
+@Listeners({TestExecutionListener.class, AllureTestNg.class})
 public class BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseTest.class);
     private static final String BASE_URL = FrameworkConfig.getBaseUrl();
@@ -29,6 +32,17 @@ public class BaseTest {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
         LOGGER.debug("SLF4J bridge for java.util.logging is configured");
+    }
+
+    @BeforeSuite
+    public void configureAllure() {
+        SelenideLogger.addListener(
+                "allure",
+                new AllureSelenide()
+                        .screenshots(true)
+                        .savePageSource(true)
+        );
+        LOGGER.debug("Allure is configured");
     }
 
     @BeforeMethod
