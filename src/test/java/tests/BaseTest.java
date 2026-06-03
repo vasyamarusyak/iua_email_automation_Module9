@@ -4,13 +4,13 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import config.FrameworkConfig;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.qameta.allure.testng.AllureTestNg;
 import listeners.TestExecutionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -19,6 +19,9 @@ import org.testng.annotations.Listeners;
 import static com.codeborne.selenide.Configuration.browser;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static config.FrameworkConfig.getBrowserName;
+import static config.FrameworkConfig.getBrowserVersion;
+import static io.vavr.API.*;
 import static java.time.Duration.ofSeconds;
 
 @Listeners({TestExecutionListener.class, AllureTestNg.class})
@@ -46,8 +49,24 @@ public class BaseTest {
     }
 
     @BeforeMethod
-    public void setUpBrowser(ITestContext context) {
-        browser = FrameworkConfig.getBrowserName();
+    public void setUpBrowser() {
+        WebDriverManager manager = Match(getBrowserName()).of(
+                Case($("CHROME"), WebDriverManager.chromedriver()
+                                .driverVersion(getBrowserVersion())),
+                Case($("FIREFOX"), WebDriverManager.firefoxdriver()
+                                .driverVersion(getBrowserVersion())),
+                Case($(), () -> {
+                    throw new IllegalArgumentException(
+                            "Unsupported browser: " + getBrowserName());
+                })
+        );
+
+//        if (getBrowserName().equals("CHROME")) {
+//            WebDriverManager.chromedriver().driverVersion(getBrowserVersion()).setup();
+//        } else {
+//          WebDriverManager.firefoxdriver().driverVersion(getBrowserVersion()).setup();
+//        }
+
         Configuration.timeout = ofSeconds(30).toMillis();
 
         LOGGER.info(
@@ -56,8 +75,8 @@ public class BaseTest {
                 FrameworkConfig.getEnvironment(),
                 FrameworkConfig.isHeadless());
 
-       open(BASE_URL);
-       LOGGER.debug("Opened base URL {}", BASE_URL);
+        open(BASE_URL);
+        LOGGER.debug("Opened base URL {}", BASE_URL);
 
         getWebDriver()
                 .manage()

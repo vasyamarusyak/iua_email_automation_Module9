@@ -47,6 +47,10 @@ public final class FrameworkConfig {
         return getProperty("browser.default", "CHROME");
     }
 
+    public static String getBrowserVersion() {
+        return getRequiredProperty("browser.version");
+    }
+
     public static boolean isHeadless() {
         return Boolean.parseBoolean(System.getProperty(
                 HEADLESS_SYSTEM_PROPERTY,

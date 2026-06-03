@@ -81,6 +81,18 @@
             <artifactId>allure-selenide</artifactId>
             <version>2.35.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.46</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>0.10.4</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
