@@ -1,8 +1,11 @@
 package models;
+import lombok.*;
 
-//import lombok.Getter;
-
-//@Getter
+@Builder
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class UserCredentials {
     String username;
     String password;

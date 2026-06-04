@@ -20,3 +20,4 @@ Implement your test scenario (or part of it, if it is possible) using some ready
 Use highlighting of elements during test execution. If any action is performed on any element during test execution, this element should be highlighted.
 
 To build an allure report - pull the project, run any test/suits of tests and use the command "allure serve allure-results"
+To run tests with maven - mvn test -Dproperty=qa -Dbrowser=chrome -DsuiteXmlFile="src/test/resources/suites/smoke.xml"

@@ -1,12 +1,12 @@
 package listeners;
 
+import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import utils.DriverHolder;
 import utils.ScreenshotUtils;
 
 import java.nio.file.Path;
@@ -34,7 +34,7 @@ public class TestExecutionListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         LOGGER.error("Test '{}' failed", result.getMethod().getMethodName(), result.getThrowable());
 
-        WebDriver driver = DriverHolder.getDriver();
+        WebDriver driver = WebDriverRunner.getWebDriver();
         if (driver == null) {
             LOGGER.warn("Screenshot was skipped because no active WebDriver was found");
             return;

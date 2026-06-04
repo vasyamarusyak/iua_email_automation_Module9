@@ -1,26 +1,24 @@
 package config;
 
+import lombok.experimental.UtilityClass;
 import models.UserCredentials;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Locale;
 import java.util.Properties;
 
+@UtilityClass
 public final class FrameworkConfig {
     private static final String DEFAULT_ENV = "qa";
     private static final String ENV_SYSTEM_PROPERTY = "env";
     private static final String BROWSER_SYSTEM_PROPERTY = "browser";
+    private static final String DEFAULT_BROWSER = "chrome";
     private static final String HEADLESS_SYSTEM_PROPERTY = "headless";
-    private static final String DEFAULT_TIMEOUT_KEY = "default.timeout.seconds";
-    private static final Properties PROPERTIES = loadEnvironmentProperties(resolveEnvironment());
-
-    private FrameworkConfig() {
-    }
+    private static final Properties PROPERTIES = loadPropertyFile(resolveEnvironment(DEFAULT_ENV));
 
     public static String getEnvironment() {
-        return resolveEnvironment();
+        return resolveEnvironment(DEFAULT_ENV);
     }
 
     public static String getBaseUrl() {
@@ -34,17 +32,16 @@ public final class FrameworkConfig {
         );
     }
 
-    public static String getDefaultRecipient() {
+    public static String getRecipient() {
         return getRequiredProperty("mail.recipient");
     }
 
     public static String getBrowserName() {
-        String browserFromSystem = getRequiredProperty("browser.default");
-       // String browserFromSystem = System.getProperty(BROWSER_SYSTEM_PROPERTY);
+        String browserFromSystem = getRequiredProperty(BROWSER_SYSTEM_PROPERTY);
         if (hasText(browserFromSystem)) {
             return browserFromSystem;
         }
-        return getProperty("browser.default", "CHROME");
+        return getProperty(BROWSER_SYSTEM_PROPERTY, DEFAULT_BROWSER);
     }
 
     public static String getBrowserVersion() {
@@ -54,23 +51,18 @@ public final class FrameworkConfig {
     public static boolean isHeadless() {
         return Boolean.parseBoolean(System.getProperty(
                 HEADLESS_SYSTEM_PROPERTY,
-                getProperty("headless", "false")
+                getProperty("headless", "true")
         ));
     }
 
-    public static Duration getDefaultTimeout() {
-        long timeoutInSeconds = Long.parseLong(getProperty(DEFAULT_TIMEOUT_KEY, "10"));
-        return Duration.ofSeconds(timeoutInSeconds);
-    }
-
-    private static String resolveEnvironment() {
-        return System.getProperty(ENV_SYSTEM_PROPERTY, DEFAULT_ENV)
+    private static String resolveEnvironment(String environment) {
+        return System.getProperty(ENV_SYSTEM_PROPERTY, environment)
                 .trim()
                 .toLowerCase(Locale.ROOT);
     }
 
-    private static Properties loadEnvironmentProperties(String environment) {
-        String resourcePath = "env/" + environment + ".properties";
+    private static Properties loadPropertyFile(String propertyFile) {
+        String resourcePath = "env/" + propertyFile + ".properties";
         try (InputStream inputStream = FrameworkConfig.class.getClassLoader().getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
                 throw new IllegalArgumentException("Environment config was not found: " + resourcePath);

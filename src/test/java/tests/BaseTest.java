@@ -16,13 +16,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
-import static com.codeborne.selenide.Configuration.browser;
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static config.FrameworkConfig.getBrowserName;
 import static config.FrameworkConfig.getBrowserVersion;
 import static io.vavr.API.*;
-import static java.time.Duration.ofSeconds;
 
 @Listeners({TestExecutionListener.class, AllureTestNg.class})
 public class BaseTest {
@@ -50,24 +47,30 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUpBrowser() {
-        WebDriverManager manager = Match(getBrowserName()).of(
-                Case($("CHROME"), WebDriverManager.chromedriver()
-                                .driverVersion(getBrowserVersion())),
-                Case($("FIREFOX"), WebDriverManager.firefoxdriver()
-                                .driverVersion(getBrowserVersion())),
+        Configuration.pageLoadTimeout = 120000; // 120 seconds
+        Configuration.browserSize = "1920x1080";
+
+        String browser = getBrowserName();
+        Configuration.browser = browser.toLowerCase();
+
+        Match(getBrowserName()).of(
+                Case($("chrome"), () -> {
+                    WebDriverManager.chromedriver()
+                            .driverVersion(getBrowserVersion())
+                            .setup();
+                    return null;
+                }),
+                Case($("firefox"), () -> {
+                    WebDriverManager.firefoxdriver()
+                            .driverVersion(getBrowserVersion())
+                            .setup();
+                    return null;
+                }),
                 Case($(), () -> {
                     throw new IllegalArgumentException(
-                            "Unsupported browser: " + getBrowserName());
+                            "Unsupported browser: " + browser);
                 })
         );
-
-//        if (getBrowserName().equals("CHROME")) {
-//            WebDriverManager.chromedriver().driverVersion(getBrowserVersion()).setup();
-//        } else {
-//          WebDriverManager.firefoxdriver().driverVersion(getBrowserVersion()).setup();
-//        }
-
-        Configuration.timeout = ofSeconds(30).toMillis();
 
         LOGGER.info(
                 "[ACTION] Preparing driver for browser='{}', env='{}', headless={}",
@@ -77,11 +80,6 @@ public class BaseTest {
 
         open(BASE_URL);
         LOGGER.debug("Opened base URL {}", BASE_URL);
-
-        getWebDriver()
-                .manage()
-                .window()
-                .maximize();
     }
 
     @AfterMethod(alwaysRun = true)
