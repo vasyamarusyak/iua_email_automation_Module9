@@ -21,3 +21,4 @@ Use highlighting of elements during test execution. If any action is performed o
 
 To build an allure report - pull the project, run any test/suits of tests and use the command "allure serve allure-results"
 To run tests with maven - mvn test -Dproperty=qa -Dbrowser=chrome -DsuiteXmlFile="src/test/resources/suites/smoke.xml"
+To run on jenkins use command java -jar jenkins.war --httpPort=8081 (This command is used because firefox doesn't want to run when jenkins is lounched in services.msc)

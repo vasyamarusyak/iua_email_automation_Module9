@@ -25,6 +25,7 @@ public class InboxPage extends BasePage {
     }
 
     public InboxPage openDraftsFolder() {
+        logger.info("[ACTION] Open draft folder");
         highlightElementAndClick(draftsFolder);
 
         return this;
@@ -37,12 +38,14 @@ public class InboxPage extends BasePage {
     }
 
     public CreateEmailPage clickCreateLetter() {
+        logger.info("[ACTION] Clicked create letter");
         highlightElementAndClick(createLetterButton);
 
         return new CreateEmailPage();
     }
 
     public CreateEmailPage openDraftBySubject(String subject) {
+        logger.info("[ACTION] Open draft by subject '{}'", subject);
         $x(format(DRAFT_BY_SUBJECT_XPATH, subject))
                 .shouldBe(clickable)
                 .click();
@@ -51,20 +54,24 @@ public class InboxPage extends BasePage {
     }
 
     public boolean isDraftPresent(String subject) {
+        logger.debug("Checking that draft '{}' is present", subject);
         return isDisplayed($x(format(DRAFT_BY_SUBJECT_XPATH, subject)), ofSeconds(5));
     }
 
     public boolean isEmailSent() {
+        logger.debug("Checking that email is sent");
         return isDisplayed(letterSuccesfullySentLabel, ofSeconds(10));
     }
 
     public boolean isSentEmailPresent(String subject) {
+        logger.debug("Checking that sent email '{}' is present", subject);
         return isDisplayed($x(format(SENT_BY_SUBJECT_XPATH, subject)), ofSeconds(5));
     }
 
     public LoginPage logOut() {
         highlightElementAndClick(gearButton);
         highlightElementAndClick(logoutButton);
+        logger.info("[ACTION] User is logged out");
 
         return new LoginPage();
     }

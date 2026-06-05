@@ -16,6 +16,7 @@ public class LoginPage extends BasePage {
         highlightElementAndSendKeys(loginInput, userCredentials.getUsername());
         highlightElementAndSendKeys(passwordInput, userCredentials.getPassword());
         highlightElementAndClick(loginButton);
+        logger.info("[ACTION] The user is logged in");
 
         return new InboxPage();
     }

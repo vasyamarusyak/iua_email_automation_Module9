@@ -14,6 +14,8 @@ public final class FrameworkConfig {
     private static final String ENV_SYSTEM_PROPERTY = "env";
     private static final String BROWSER_SYSTEM_PROPERTY = "browser";
     private static final String DEFAULT_BROWSER = "chrome";
+    private static final String BROWSER_VERSION_SYSTEM_PROPERTY = "browser.version";
+    private static final String DEFAULT_BROWSER_VERSION = "148.0.7778.217";
     private static final String HEADLESS_SYSTEM_PROPERTY = "headless";
     private static final Properties PROPERTIES = loadPropertyFile(resolveEnvironment(DEFAULT_ENV));
 
@@ -37,7 +39,10 @@ public final class FrameworkConfig {
     }
 
     public static String getBrowserName() {
-        String browserFromSystem = getRequiredProperty(BROWSER_SYSTEM_PROPERTY);
+        String browserFromSystem = System.getProperty(
+                BROWSER_SYSTEM_PROPERTY,
+                PROPERTIES.getProperty(BROWSER_SYSTEM_PROPERTY)
+        );
         if (hasText(browserFromSystem)) {
             return browserFromSystem;
         }
@@ -45,7 +50,14 @@ public final class FrameworkConfig {
     }
 
     public static String getBrowserVersion() {
-        return getRequiredProperty("browser.version");
+        String browserVersionFromSystem = System.getProperty(
+                BROWSER_VERSION_SYSTEM_PROPERTY,
+                PROPERTIES.getProperty(BROWSER_VERSION_SYSTEM_PROPERTY)
+        );
+        if (hasText(browserVersionFromSystem)) {
+            return browserVersionFromSystem;
+        }
+        return getProperty(BROWSER_VERSION_SYSTEM_PROPERTY, DEFAULT_BROWSER_VERSION);
     }
 
     public static boolean isHeadless() {

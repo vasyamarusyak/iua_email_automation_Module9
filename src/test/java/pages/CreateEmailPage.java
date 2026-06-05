@@ -14,6 +14,7 @@ public class CreateEmailPage extends BasePage{
     private final SelenideElement saveInDraftsButton = $x("//input[@name='save_in_drafts']");
 
     public CreateEmailPage fillEmail(String receiver, String subject, String body) {
+        logger.info("[ACTION] Fill email for recipient '{}' with subject '{}'", receiver, subject);
         highlightElementAndClick(receiverField);
         highlightElementAndSendKeys(receiverField, receiver);
         receiverField.pressTab();

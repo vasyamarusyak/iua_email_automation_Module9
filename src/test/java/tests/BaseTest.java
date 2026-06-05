@@ -49,6 +49,7 @@ public class BaseTest {
     public void setUpBrowser() {
         Configuration.pageLoadTimeout = 120000; // 120 seconds
         Configuration.browserSize = "1920x1080";
+        Configuration.headless = true;
 
         String browser = getBrowserName();
         Configuration.browser = browser.toLowerCase();
